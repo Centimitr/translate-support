@@ -16,10 +16,12 @@ func main() {
 	var n = []string{
 		"b",
 		"f",
+		"f",
 		"d",
 		"f",
 	}
-	add, remove := diff.ModifiedLines(o, n)
-	fmt.Println(add)
-	fmt.Println(remove)
+	result := diff.ModifiedLines(o, n)
+	for _, l := range result.Lines {
+		fmt.Println(l.Text)
+	}
 }
