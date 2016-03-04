@@ -3,10 +3,10 @@ package diff
 import ()
 
 type ResultLine struct {
-	Text            string
-	UnmodifiedLines bool
-	AddedLines      bool
-	RemovedLines    bool
+	Text         string
+	IsUnmodified bool
+	IsAdded      bool
+	IsRemoved    bool
 }
 
 type Result struct {
@@ -44,15 +44,13 @@ func findLine(text []string, s string) (int, bool) {
 
 func ModifiedLines(oldText []string, newText []string) (result Result) {
 	newTextLine := 0
-	for /*oldTextLine*/ _, curStr := range oldText {
+	for _, curStr := range oldText {
 		if foundLine, ok := findLine(newText[newTextLine:], curStr); !ok {
 			result.add(curStr, REMOVED)
-			// remove = append(remove, oldTextLine)
 			continue
 		} else {
 			//found situation
 			for i := newTextLine; i < newTextLine+foundLine; i++ {
-				// add = append(add, i)
 				result.add(newText[i], ADDED)
 			}
 			newTextLine = newTextLine + foundLine + 1
@@ -61,7 +59,6 @@ func ModifiedLines(oldText []string, newText []string) (result Result) {
 	}
 	//rest newText's lines are added
 	for i := newTextLine; i < len(newText); i++ {
-		// add = append(add, i)
 		result.add(newText[i], ADDED)
 
 	}

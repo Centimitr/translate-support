@@ -22,6 +22,14 @@ func main() {
 	}
 	result := diff.ModifiedLines(o, n)
 	for _, l := range result.Lines {
+		switch {
+		case l.IsUnmodified:
+			fmt.Print("   ")
+		case l.IsAdded:
+			fmt.Print(" + ")
+		case l.IsRemoved:
+			fmt.Print(" - ")
+		}
 		fmt.Println(l.Text)
 	}
 }
