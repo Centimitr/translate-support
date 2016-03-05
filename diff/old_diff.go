@@ -27,7 +27,9 @@ func (r *Result) add(line string, lineType int) {
 		r.Lines = append(r.Lines, ResultLine{line, false, true, false})
 		//here need to swap the last 2 Lines
 		//because the iteration below is on the oldText
-		r.Lines[len(r.Lines)-2], r.Lines[len(r.Lines)-1] = r.Lines[len(r.Lines)-1], r.Lines[len(r.Lines)-2]
+		if r.Lines[len(r.Lines)-2].IsRemoved {
+			r.Lines[len(r.Lines)-2], r.Lines[len(r.Lines)-1] = r.Lines[len(r.Lines)-1], r.Lines[len(r.Lines)-2]
+		}
 	case REMOVED:
 		r.Lines = append(r.Lines, ResultLine{line, false, false, true})
 	}

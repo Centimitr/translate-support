@@ -3,24 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/Centimitr/translate-support/diff"
+	"io/ioutil"
+	"strings"
 )
 
 func main() {
-	var o = []string{
-		"a",
-		"b",
-		"c",
-		"d",
-		"e",
-	}
-	var n = []string{
-		"b",
-		"f",
-		"f",
-		"d",
-		"f",
-	}
-	result := diff.ModifiedLines(o, n)
+	oBytes, _ := ioutil.ReadFile("old.txt")
+	nBytes, _ := ioutil.ReadFile("new.txt")
+	result := diff.ModifiedLines(strings.Split(string(oBytes), ("\n")), strings.Split(string(nBytes), ("\n")))
 	for _, l := range result.Lines {
 		switch {
 		case l.IsUnmodified:
