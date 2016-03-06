@@ -1,7 +1,5 @@
 package diff
 
-import "fmt"
-
 func findLine(text []string, s string) (pos int, ok bool) {
 	for i, l := range text {
 		if l == s {
@@ -21,7 +19,6 @@ func findSameLine(text1 []string, text2 []string) (text1pos int, text2pos int, o
 }
 
 func DiffResult(oldText []string, newText []string) (result Result) {
-	fmt.Println("Length:", len(oldText), len(newText))
 	var addBlock = func(opos, npos int, oldText, newText []string) {
 		for i := 0; i < opos; i++ {
 			result.AddLine(oldText[i], REMOVED)
@@ -34,9 +31,7 @@ func DiffResult(oldText []string, newText []string) (result Result) {
 	//add blocks of {removedLines,addedLines,anUnmodifiedLine}
 	oldProcPos, newProcPos := 0, 0
 	for oldProcPos < len(oldText) && newProcPos < len(newText) {
-		fmt.Println("Current Pos:", oldProcPos, newProcPos)
 		if opos, npos, ok := findSameLine(oldText[oldProcPos:], newText[newProcPos:]); ok {
-			fmt.Println("found:", opos, npos, oldText[oldProcPos:], newText[newProcPos:])
 			addBlock(opos, npos, oldText[oldProcPos:], newText[newProcPos:])
 			oldProcPos, newProcPos = oldProcPos+opos+1, newProcPos+npos+1
 		} else {

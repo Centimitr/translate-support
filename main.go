@@ -1,34 +1,27 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/Centimitr/translate-support/diff"
-	"io/ioutil"
+	// "io/ioutil"
 	// "strings"
+	"os"
 )
 
+func ReadFileLines(filename string) (lines []string) {
+	file, _ := os.Open(filename)
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintln(os.Stderr, "reading standard input:", err)
+	}
+	return
+}
+
 func main() {
-	oBytes, _ := ioutil.ReadFile("old.txt")
-	nBytes, _ := ioutil.ReadFile("new.txt")
-	fmt.Println(oBytes, nBytes)
-	o := []string{
-		"a",
-		"b",
-		"c",
-		"d",
-		"f",
-	}
-	n := []string{
-		"x",
-		"x",
-		"b",
-		"c",
-		"x",
-		"d",
-		"x",
-		"f",
-		"x",
-	}
-	result := diff.DiffResult(o, n)
+	result := diff.DiffResult(ReadFileLines("old.txt"), ReadFileLines("new.txt"))
 	fmt.Println(result.String())
 }
