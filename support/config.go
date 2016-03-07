@@ -1,15 +1,24 @@
-package main
+package support
 
 import (
 	"os"
 )
 
-const WORKSPACE_DIR = "workspace"
+const WORKSPACE_DIR = "translate_workspace"
+
+type Version struct {
+	Name `json:name`
+	// GitHash `json:gitHash`
+}
 
 type Config struct {
-	SrcLang string `json:source`
-	TgtLang string `json:target`
+	SrcLang  string    `json:source`
+	TgtLang  string    `json:target`
+	Versions []Version `json:versions`
+	Watch    []string  `json:watch`
 }
+
+var config Config
 
 func Init() {
 	os.Mkdir("./"+WORKSPACE_DIR, 0777)
@@ -26,4 +35,12 @@ func AddSrcLang(dirname string) error {
 
 func AddTgtLang(dirname string) error {
 	addLang(dirname)
+}
+
+func AddWatch(filename string) error {
+
+}
+
+func ReadWatch() {
+
 }
