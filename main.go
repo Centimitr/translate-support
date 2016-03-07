@@ -3,7 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/Centimitr/translate-support/diff"
+	// "github.com/Centimitr/translate-support/diff"
 	// "io/ioutil"
 	// "strings"
 	"os"
@@ -22,6 +22,9 @@ func ReadFileLines(filename string) (lines []string) {
 }
 
 func main() {
-	result := diff.DiffResult(ReadFileLines("old.txt"), ReadFileLines("new.txt"))
-	fmt.Println(result.String())
+	// result := diff.DiffResult(ReadFileLines("old.txt"), ReadFileLines("new.txt"))
+	// fmt.Println(result.String())
+	Init()
+	AddNewLanguage("en-us", true)
+	AddNewLanguage("zh-cn", false)
 }
