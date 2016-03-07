@@ -7,7 +7,7 @@ import (
 const WORKSPACE_DIR = "translate_workspace"
 
 type Version struct {
-	Name `json:name`
+	Name string `json:name`
 	// GitHash `json:gitHash`
 }
 
@@ -31,14 +31,16 @@ func addLang(dirname string) error {
 
 func AddSrcLang(dirname string) error {
 	addLang(dirname)
+	return nil
 }
 
 func AddTgtLang(dirname string) error {
 	addLang(dirname)
+	return nil
 }
 
 func AddWatch(filename string) error {
-
+	return nil
 }
 
 func ReadWatch() {

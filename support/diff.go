@@ -1,7 +1,10 @@
-package main
+package support
 
 import (
+	"bufio"
+	"fmt"
 	"github.com/Centimitr/translate-support/diff"
+	"os"
 )
 
 func ReadFileLines(filename string) (lines []string) {
@@ -22,9 +25,9 @@ func DiffLatest(filename string) string {
 	latestVer := "alpha.1"
 	//read old & new text
 	oldText := ReadFileLines(WORKSPACE_DIR + prevVer + "/" + filename)
-	newText := ReadFileLines(WORKSPACE_DIR + lastestVer + "/" + filename)
+	newText := ReadFileLines(WORKSPACE_DIR + latestVer + "/" + filename)
 	//diff
-	result := diff.DiffResult(oldText, newText)
+	diff.DiffResult(oldText, newText)
 	//marshal json
 	return "[]"
 }

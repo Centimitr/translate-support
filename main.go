@@ -1,13 +1,10 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
 	// "github.com/Centimitr/translate-support/diff"
 	spt "github.com/Centimitr/translate-support/support"
 	// "io/ioutil"
 	// "strings"
-	"os"
 )
 
 func main() {
@@ -17,7 +14,7 @@ func main() {
 	spt.AddSrcLang("en-us")
 	spt.AddTgtLang("zh-cn")
 	spt.AddWatch("test.txt")
-	spt.CopyFormerTrans()
+	spt.CopyFormerTrans([]string{})
 	spt.DiffLatest("test.txt")
 	spt.GenResult()
 }
