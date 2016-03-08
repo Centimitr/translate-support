@@ -19,10 +19,10 @@ type Version struct {
 }
 
 type Config struct {
-	srcLang  string    `json:source`
-	tgtLang  string    `json:target`
-	versions []Version `json:versions`
-	watch    []string  `json:watch`
+	SrcLang  string    `json:source`
+	TgtLang  string    `json:target`
+	Versions []Version `json:Versions`
+	Watch    []string  `json:Watch`
 }
 
 func Ins() Config {
@@ -46,47 +46,47 @@ func (c *Config) Save() {
 // using api to multipulate the src & tgt settings
 
 func (c *Config) SetSrcLang(src string) {
-	c.srcLang = src
+	c.SrcLang = src
 	os.Mkdir(filepath.Join(WORKSPACE_DIR, src), 0777)
 	c.Save()
 }
 
 func (c *Config) SetTgtLang(tgt string) {
-	c.tgtLang = tgt
+	c.TgtLang = tgt
 	os.Mkdir(filepath.Join(WORKSPACE_DIR, tgt), 0777)
 	c.Save()
 }
 
 func (c *Config) GetSrcLang() string {
-	return c.srcLang
+	return c.SrcLang
 }
 
 func (c *Config) GetTgtLang() string {
-	return c.tgtLang
+	return c.TgtLang
 }
 
 // version related
 
 func (c *Config) GetVers() []Version {
-	return c.versions
+	return c.Versions
 }
 
 func (c *Config) GetLatestVer() (Version, error) {
-	if len(c.versions) > 0 {
-		return c.versions[len(c.versions)-1], nil
+	if len(c.Versions) > 0 {
+		return c.Versions[len(c.Versions)-1], nil
 	}
 	return Version{}, nil
 }
 
 func (c *Config) GetPrevVer() (Version, error) {
-	if len(c.versions) > 1 {
-		return c.versions[len(c.versions)-2], nil
+	if len(c.Versions) > 1 {
+		return c.Versions[len(c.Versions)-2], nil
 	}
 	return Version{}, nil
 }
 
 func (c *Config) hasVer(vername string) bool {
-	for _, v := range c.versions {
+	for _, v := range c.Versions {
 		if v.Name == vername {
 			return true
 		}
@@ -96,7 +96,7 @@ func (c *Config) hasVer(vername string) bool {
 
 func (c *Config) AddVer(vername string) error {
 	if !c.hasVer(vername) {
-		c.versions = append(c.versions, Version{vername})
+		c.Versions = append(c.Versions, Version{vername})
 		os.Mkdir(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), vername), 0777)
 		os.Mkdir(filepath.Join(WORKSPACE_DIR, c.GetTgtLang(), vername), 0777)
 		c.Save()
@@ -108,11 +108,11 @@ func (c *Config) AddVer(vername string) error {
 
 func (c *Config) RemoveVer(vername string) error {
 	if /*ver exist*/ true {
-		for i, v := range c.versions {
+		for i, v := range c.Versions {
 			if v.Name == vername {
-				copy(c.versions[i:], c.versions[i+1:])
+				copy(c.Versions[i:], c.Versions[i+1:])
 				// check
-				c.versions = c.versions[:len(c.versions)-1]
+				c.Versions = c.Versions[:len(c.Versions)-1]
 				os.Remove(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), vername))
 				os.Remove(filepath.Join(WORKSPACE_DIR, c.GetTgtLang(), vername))
 				c.Save()
@@ -125,10 +125,10 @@ func (c *Config) RemoveVer(vername string) error {
 	return nil
 }
 
-// watch related
+// Watch related
 
-func (c *Config) haswatch(filename string) bool {
-	for _, fn := range c.watch {
+func (c *Config) hasWatch(filename string) bool {
+	for _, fn := range c.Watch {
 		if fn == filename {
 			return true
 		}
@@ -137,23 +137,23 @@ func (c *Config) haswatch(filename string) bool {
 }
 
 func (c *Config) GetWatchs() []string {
-	return c.watch
+	return c.Watch
 }
 
 func (c *Config) AddWatch(filename string) {
 	fn := filepath.Clean(filename)
-	if c.haswatch(fn) {
-		c.watch = append(c.watch, filepath.Clean(fn))
+	if c.hasWatch(fn) {
+		c.Watch = append(c.Watch, filepath.Clean(fn))
 	}
 	c.Save()
 }
 
 func (c *Config) RemoveWatch(filename string) {
-	for i, fn := range c.watch {
+	for i, fn := range c.Watch {
 		if fn == filename {
-			copy(c.watch[i:], c.watch[i+1:])
+			copy(c.Watch[i:], c.Watch[i+1:])
 			// check
-			c.watch = c.watch[:len(c.watch)-1]
+			c.Watch = c.Watch[:len(c.Watch)-1]
 			break
 		}
 	}

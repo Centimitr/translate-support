@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Centimitr/translate-support/diff"
 	"os"
+	"path/filepath"
 )
 
 func ReadFileLines(filename string) (lines []string) {
@@ -24,8 +25,8 @@ func (c *Config) DiffLatest(filename string) string {
 	prevVer := "alpha.0"
 	latestVer := "alpha.1"
 	//read old & new text
-	oldText := ReadFileLines(WORKSPACE_DIR + prevVer + "/" + filename)
-	newText := ReadFileLines(WORKSPACE_DIR + latestVer + "/" + filename)
+	oldText := ReadFileLines(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), prevVer, filename))
+	newText := ReadFileLines(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), latestVer, filename))
 	//diff
 	diff.DiffResult(oldText, newText)
 	//marshal json
