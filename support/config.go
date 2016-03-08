@@ -1,11 +1,17 @@
 package support
 
 import (
+	// "encoding/json"
+	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 )
 
-const WORKSPACE_DIR = "translate_workspace"
+const (
+	WORKSPACE_DIR   = "translate_workspace"
+	CONFIG_FILENAME = "config.json"
+)
 
 type Version struct {
 	Name string `json:name`
@@ -19,9 +25,16 @@ type Config struct {
 	watch    []string  `json:watch`
 }
 
-func (c *Config) Init() {
-	os.Mkdir(WORKSPACE_DIR, 0777)
-	os.Create(filepath.Join(WORKSPACE_DIR, "config.json"))
+func Ins() Config {
+	var c Config
+	_, e := ioutil.ReadFile(filepath.Join(WORKSPACE_DIR, CONFIG_FILENAME))
+	if e != nil {
+		fmt.Fprintln(os.Stderr, "Config file read err:", e)
+	}
+	// if e := json.Unmarshal(data, c); e != nil {
+	// 	fmt.Fprintln(os.Stderr, "JSON unmarshaling failed: %s", e)
+	// }
+	return c
 }
 
 func (c *Config) Save() {
