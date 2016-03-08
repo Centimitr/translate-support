@@ -1,10 +1,10 @@
 package support
 
-func CopyFormerTrans(filename []string) {
+func (c *Config) CopyFormerTrans(filename []string) {
 	//reading watching list
-	ReadWatch()
+	c.Getwatchs()
 }
 
-func CreateEmptyTrans(filename []string) {
+func (c *Config) CreateEmptyTrans(filename []string) {
 
 }
