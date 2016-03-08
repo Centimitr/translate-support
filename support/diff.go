@@ -19,7 +19,7 @@ func ReadFileLines(filename string) (lines []string) {
 	return
 }
 
-func DiffLatest(filename string) string {
+func (c *Config) DiffLatest(filename string) string {
 	//read watch and judge whether it is in the list
 	prevVer := "alpha.0"
 	latestVer := "alpha.1"

@@ -54,27 +54,27 @@ func (c *Config) GetTgtLang() string {
 
 // version related
 
-func (c *Config) GetVers() string {
+func (c *Config) GetVers() []Version {
 	return c.versions
 }
 
-func (c *Config) GetLatestVer() string {
+func (c *Config) GetLatestVer() (Version, error) {
 	if len(c.versions) > 0 {
-		return c.versions[len(c.versions)-1]
+		return c.versions[len(c.versions)-1], nil
 	}
-	return nil
+	return Version{}, nil
 }
 
-func (c *Config) GetPrevVer() string {
+func (c *Config) GetPrevVer() (Version, error) {
 	if len(c.versions) > 1 {
-		return c.versions[len(c.versions)-2]
+		return c.versions[len(c.versions)-2], nil
 	}
-	return nil
+	return Version{}, nil
 }
 
 func (c *Config) hasVer(vername string) bool {
 	for _, v := range c.versions {
-		if v == vername {
+		if v.Name == vername {
 			return true
 		}
 	}
@@ -83,23 +83,23 @@ func (c *Config) hasVer(vername string) bool {
 
 func (c *Config) AddVer(vername string) error {
 	if !c.hasVer(vername) {
-		c.versions = append(c.versions, vername)
+		c.versions = append(c.versions, Version{vername})
 		os.Mkdir(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), vername), 0777)
 		os.Mkdir(filepath.Join(WORKSPACE_DIR, c.GetTgtLang(), vername), 0777)
 		c.Save()
 		return nil
 	}
 	// version exist
-	return 1
+	return nil
 }
 
 func (c *Config) RemoveVer(vername string) error {
-	if /*ver exist*/ 1 {
+	if /*ver exist*/ true {
 		for i, v := range c.versions {
-			if v == vername {
+			if v.Name == vername {
 				copy(c.versions[i:], c.versions[i+1:])
 				// check
-				c.versions = c.versions[:-1]
+				c.versions = c.versions[:len(c.versions)-1]
 				os.Remove(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), vername))
 				os.Remove(filepath.Join(WORKSPACE_DIR, c.GetTgtLang(), vername))
 				c.Save()
@@ -123,24 +123,24 @@ func (c *Config) haswatch(filename string) bool {
 	return false
 }
 
-func (c *Config) Getwatchs() []string {
+func (c *Config) GetWatchs() []string {
 	return c.watch
 }
 
-func (c *Config) Addwatch(filename string) error {
-	fn := filepath.Clean(filepath)
+func (c *Config) AddWatch(filename string) {
+	fn := filepath.Clean(filename)
 	if c.haswatch(fn) {
 		c.watch = append(c.watch, filepath.Clean(fn))
 	}
 	c.Save()
 }
 
-func (c *Config) Removewatch(filename string) {
+func (c *Config) RemoveWatch(filename string) {
 	for i, fn := range c.watch {
 		if fn == filename {
 			copy(c.watch[i:], c.watch[i+1:])
 			// check
-			c.watch = c.watch[:-1]
+			c.watch = c.watch[:len(c.watch)-1]
 			break
 		}
 	}

@@ -4,7 +4,7 @@ import (
 // "fmt"
 )
 
-func GenResult() error {
+func (c *Config) GenResult() error {
 	//reading watching list
 	//concat files
 	//copy to project root
