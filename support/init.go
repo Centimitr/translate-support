@@ -2,7 +2,6 @@ package support
 
 import (
 	"os"
-	"path/filepath"
 )
 
 func Init() (ok bool) {
@@ -10,9 +9,12 @@ func Init() (ok bool) {
 	if e != nil {
 		return false
 	}
-	_, e = os.Create(filepath.Join(WORKSPACE_DIR, CONFIG_FILENAME))
-	if e != nil {
-		return false
-	}
+	// file create is needless because config.Save() will create it if the file is not exist
+	// _, e = os.Create(filepath.Join(WORKSPACE_DIR, CONFIG_FILENAME))
+	// if e != nil {
+	// 	return false
+	// }
+	var cfg Config
+	cfg.Save()
 	return true
 }

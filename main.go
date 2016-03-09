@@ -15,7 +15,7 @@ func main() {
 		switch os.Args[1] {
 		case "init":
 			support.Init()
-		case "test":
+		case "proc":
 			var spt = support.Ins()
 			// var spt = new(support.Config)
 			spt.SetSrcLang("en-us")
@@ -26,6 +26,12 @@ func main() {
 			spt.CreateEmptyTrans([]string{})
 			spt.DiffLatest("test.txt")
 			spt.GenResult()
+		case "test":
+			var spt = support.Ins()
+			spt.SetSrcLang("en-us")
+			spt.SetTgtLang("zh-cn")
+			spt.AddVer("alpha.0")
+			spt.AddWatch("test.txt")
 		}
 	}
 }
