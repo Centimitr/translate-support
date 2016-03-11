@@ -150,8 +150,8 @@ func (c *Config) GetWatchs() []string {
 
 func (c *Config) AddWatch(filename string) {
 	fn := filepath.Clean(filename)
-	if c.hasWatch(fn) {
-		c.Watch = append(c.Watch, filepath.Clean(fn))
+	if !c.hasWatch(fn) {
+		c.Watch = append(c.Watch, fn)
 	}
 	c.Save()
 }

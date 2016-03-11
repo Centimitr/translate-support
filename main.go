@@ -5,6 +5,9 @@ import (
 	"github.com/Centimitr/translate-support/support"
 	// "io/ioutil"
 	// "strings"
+	"fmt"
+	"html"
+	"net/http"
 	"os"
 )
 
@@ -15,6 +18,12 @@ func main() {
 		switch os.Args[1] {
 		case "init":
 			support.Init()
+		case "serve":
+			// var spt = support.Ins()
+			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+				fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+			})
+			http.ListenAndServe(":4567", nil)
 		case "proc":
 			var spt = support.Ins()
 			// var spt = new(support.Config)
@@ -24,7 +33,7 @@ func main() {
 			spt.AddWatch("test.txt")
 			spt.CopyFormerTrans([]string{})
 			spt.CreateEmptyTrans([]string{})
-			spt.DiffLatest("test.txt")
+			spt.LineDiffLatest("test.txt")
 			spt.GenResult()
 		case "test":
 			var spt = support.Ins()

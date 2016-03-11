@@ -18,7 +18,7 @@ func findSameLine(text1 []string, text2 []string) (text1pos int, text2pos int, o
 	return -1, -1, false
 }
 
-func DiffResult(oldText []string, newText []string) (result Result) {
+func LineDiff(oldText []string, newText []string) (result LineDiffResult) {
 	var addBlock = func(opos, npos int, oldText, newText []string) {
 		for i := 0; i < opos; i++ {
 			result.AddLine(oldText[i], REMOVED)
