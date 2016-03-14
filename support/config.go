@@ -2,7 +2,7 @@ package support
 
 import (
 	"encoding/json"
-	"fmt"
+	// "fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -20,22 +20,28 @@ type Version struct {
 }
 
 type Config struct {
+	Port     string    `json:"port"`
 	SrcLang  string    `json:"source"`
 	TgtLang  string    `json:"target"`
 	Versions []Version `json:"versions"`
 	Watch    []string  `json:"watch"`
 }
 
-func Ins() Config {
+func Ins() (Config, bool) {
 	var c Config
 	_, e := ioutil.ReadFile(filepath.Join(WORKSPACE_DIR, CONFIG_FILENAME))
-	if e != nil {
-		fmt.Fprintln(os.Stderr, "Config file read err:", e)
-	}
+	// if e != nil {
+	// 	fmt.Fprintln(os.Stderr, "Config file read err:", e)
+	// }
 	// if e := json.Unmarshal(data, c); e != nil {
 	// 	fmt.Fprintln(os.Stderr, "JSON unmarshaling failed: %s", e)
 	// }
-	return c
+	c.Port = "4567"
+	if e != nil {
+		return c, false
+	} else {
+		return c, true
+	}
 }
 
 func (c *Config) Save() {
