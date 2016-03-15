@@ -2,6 +2,7 @@ package support
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"github.com/Centimitr/translate-support/diff"
 	"os"
@@ -26,7 +27,8 @@ func (c *Config) LineDiff(curVer, oldVer, filename string) string {
 	oldText := ReadFileLines(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), oldVer, filename))
 	curText := ReadFileLines(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), curVer, filename))
 	//diff
-	diff.LineDiff(oldText, curText)
+	r := diff.LineDiff(oldText, curText)
 	//marshal json
-	return "[]"
+	d, _ := json.Marshal(r)
+	return string(d)
 }

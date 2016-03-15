@@ -64,7 +64,8 @@ func main() {
 				http.HandleFunc("/api/versions/v/compare/", func(w http.ResponseWriter, r *http.Request) {
 					switch r.Method {
 					case "GET":
-						d := spt.LineDiff(r.Header.Get("oldVersion"), r.Header.Get("version"), r.Header.Get("filename"))
+						w.Header().Add("Access-Control-Allow-Origin", "*")
+						d := spt.LineDiff(r.Header.Get("version"), r.Header.Get("oldVersion"), r.Header.Get("filename"))
 						fmt.Fprint(w, d)
 					}
 				})
