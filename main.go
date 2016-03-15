@@ -19,12 +19,21 @@ func main() {
 		case "init":
 			support.Init()
 		case "serve":
-			if _, initialed := support.Ins(); initialed {
+			if spt, initialed := support.Ins(); initialed {
 				fmt.Println("initialed.")
 				wd, _ := os.Getwd()
 				http.Handle("/", http.FileServer(http.Dir(wd+"/"+support.WORKSPACE_DIR+"/dist")))
 				http.HandleFunc("/api/versions", func(w http.ResponseWriter, r *http.Request) {
 					// get post
+					fmt.Println(r.Method)
+					switch r.Method {
+					case "GET":
+						fmt.Println(spt.GetVers())
+					case "POST":
+						fmt.Println(spt.GetVers())
+						spt.AddVer(r.Header.Get("name"))
+						fmt.Println(spt.GetVers())
+					}
 				})
 				http.HandleFunc("/api/{version}", func(w http.ResponseWriter, r *http.Request) {
 					// delete put(basever) put(initwatch) put(inittranslate)

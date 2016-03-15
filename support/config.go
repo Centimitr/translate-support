@@ -15,7 +15,9 @@ const (
 )
 
 type Version struct {
-	Name string `json:"name"`
+	Name    string   `json:"name"`
+	BaseVer string   `json:"basever"`
+	Watch   []string `json:"watch"`
 	// GitHash `json:gitHash`
 }
 
@@ -24,7 +26,6 @@ type Config struct {
 	SrcLang  string    `json:"source"`
 	TgtLang  string    `json:"target"`
 	Versions []Version `json:"versions"`
-	Watch    []string  `json:"watch"`
 }
 
 func Ins() (Config, bool) {
@@ -110,7 +111,7 @@ func (c *Config) hasVer(vername string) bool {
 
 func (c *Config) AddVer(vername string) error {
 	if !c.hasVer(vername) {
-		c.Versions = append(c.Versions, Version{vername})
+		c.Versions = append(c.Versions, Version{vername, "", []string{}})
 		os.Mkdir(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), vername), 0777)
 		os.Mkdir(filepath.Join(WORKSPACE_DIR, c.GetTgtLang(), vername), 0777)
 		c.Save()
@@ -141,35 +142,54 @@ func (c *Config) RemoveVer(vername string) error {
 
 // Watch related
 
-func (c *Config) hasWatch(filename string) bool {
-	for _, fn := range c.Watch {
-		if fn == filename {
-			return true
+func (c *Config) hasWatch(vername string, filename string) bool {
+	for _, v := range c.Versions {
+		if vername == v.Name {
+			for _, fn := range v.Watch {
+				if fn == filename {
+					return true
+				}
+			}
+			break
 		}
 	}
 	return false
 }
 
-func (c *Config) GetWatchs() []string {
-	return c.Watch
+func (c *Config) GetWatchs(vername string) []string {
+	for _, v := range c.Versions {
+		if vername == v.Name {
+			return v.Watch
+		}
+	}
+	return []string{}
 }
 
-func (c *Config) AddWatch(filename string) {
+func (c *Config) AddWatch(vername string, filename string) {
 	fn := filepath.Clean(filename)
-	if !c.hasWatch(fn) {
-		c.Watch = append(c.Watch, fn)
+	if !c.hasWatch(vername, fn) {
+		for _, v := range c.Versions {
+			if vername == v.Name {
+				v.Watch = append(v.Watch, fn)
+			}
+		}
 	}
 	c.Save()
 }
 
-func (c *Config) RemoveWatch(filename string) {
-	for i, fn := range c.Watch {
-		if fn == filename {
-			copy(c.Watch[i:], c.Watch[i+1:])
-			// check
-			c.Watch = c.Watch[:len(c.Watch)-1]
-			break
+func (c *Config) RemoveWatch(vername string, filename string) {
+	for _, v := range c.Versions {
+		if vername == v.Name {
+			for i, fn := range v.Watch {
+				if fn == filename {
+					copy(v.Watch[i:], v.Watch[i+1:])
+					// check
+					v.Watch = v.Watch[:len(v.Watch)-1]
+					break
+				}
+			}
 		}
 	}
+
 	c.Save()
 }
