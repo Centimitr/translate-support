@@ -20,15 +20,13 @@ func ReadFileLines(filename string) (lines []string) {
 	return
 }
 
-func (c *Config) LineDiffLatest(filename string) string {
+func (c *Config) LineDiff(curVer, oldVer, filename string) string {
 	//read watch and judge whether it is in the list
-	prevVer := "alpha.0"
-	latestVer := "alpha.1"
 	//read old & new text
-	oldText := ReadFileLines(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), prevVer, filename))
-	newText := ReadFileLines(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), latestVer, filename))
+	oldText := ReadFileLines(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), oldVer, filename))
+	curText := ReadFileLines(filepath.Join(WORKSPACE_DIR, c.GetSrcLang(), curVer, filename))
 	//diff
-	diff.LineDiff(oldText, newText)
+	diff.LineDiff(oldText, curText)
 	//marshal json
 	return "[]"
 }

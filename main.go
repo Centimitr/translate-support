@@ -20,28 +20,53 @@ func main() {
 			support.Init()
 		case "serve":
 			if spt, initialed := support.Ins(); initialed {
-				fmt.Println("initialed.")
+				fmt.Println("Initialed.")
 				wd, _ := os.Getwd()
 				http.Handle("/", http.FileServer(http.Dir(wd+"/"+support.WORKSPACE_DIR+"/dist")))
 				http.HandleFunc("/api/versions", func(w http.ResponseWriter, r *http.Request) {
 					// get post
-					fmt.Println(r.Method)
 					switch r.Method {
 					case "GET":
-						fmt.Println(spt.GetVers())
+						d := spt.GetVers()
+						fmt.Fprint(w, d)
 					case "POST":
-						fmt.Println(spt.GetVers())
-						spt.AddVer(r.Header.Get("name"))
-						fmt.Println(spt.GetVers())
+						spt.AddVer(r.Header.Get("version"))
 					}
 				})
-				http.HandleFunc("/api/{version}", func(w http.ResponseWriter, r *http.Request) {
+				// to avoid using of 3rd party mux library, router params transferred to get
+				http.HandleFunc("/api/versions/v", func(w http.ResponseWriter, r *http.Request) {
 					// delete put(basever) put(initwatch) put(inittranslate)
+					switch r.Method {
+					case "DELETE":
+						spt.RemoveVer(r.Header.Get("version"))
+					case "PUT":
+						if r.Header.Get("initWatch") == "true" {
+
+						}
+						if r.Header.Get("initTranslate") == "true" {
+
+						}
+
+					}
 				})
-				http.HandleFunc("/api/{version}/watch", func(w http.ResponseWriter, r *http.Request) {
+				http.HandleFunc("/api/versions/v/watches", func(w http.ResponseWriter, r *http.Request) {
 					// get post delete
+					switch r.Method {
+					case "GET":
+						d := spt.GetWatchs(r.Header.Get("version"))
+						fmt.Fprint(w, d)
+					case "POST":
+						spt.AddWatch(r.Header.Get("version"), r.Header.Get("filename"))
+					case "DELETE":
+						spt.RemoveWatch(r.Header.Get("version"), r.Header.Get("filename"))
+					}
 				})
-				http.HandleFunc("/api/{version}/compare/{oldver}/", func(w http.ResponseWriter, r *http.Request) {
+				http.HandleFunc("/api/versions/v/compare/", func(w http.ResponseWriter, r *http.Request) {
+					switch r.Method {
+					case "GET":
+						d := spt.LineDiff(r.Header.Get("oldVersion"), r.Header.Get("version"), r.Header.Get("filename"))
+						fmt.Fprint(w, d)
+					}
 				})
 
 				// test
@@ -50,23 +75,6 @@ func main() {
 				})
 				http.ListenAndServe(":4567", nil)
 			}
-			// case "proc":
-			// 	var spt = support.Ins()
-			// 	// var spt = new(support.Config)
-			// 	spt.SetSrcLang("en-us")
-			// 	spt.SetTgtLang("zh-cn")
-			// 	spt.AddVer("alpha.0")
-			// 	spt.AddWatch("test.txt")
-			// 	spt.CopyFormerTrans([]string{})
-			// 	spt.CreateEmptyTrans([]string{})
-			// 	spt.LineDiffLatest("test.txt")
-			// 	spt.GenResult()
-			// case "test":
-			// 	var spt = support.Ins()
-			// 	spt.SetSrcLang("en-us")
-			// 	spt.SetTgtLang("zh-cn")
-			// 	spt.AddVer("alpha.0")
-			// 	spt.AddWatch("test.txt")
 		}
 	}
 }

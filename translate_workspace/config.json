@@ -6,32 +6,10 @@
         {
             "name": "beta.1",
             "basever": "",
-            "watch": []
-        },
-        {
-            "name": "beta.2",
-            "basever": "",
-            "watch": []
-        },
-        {
-            "name": "beta.3",
-            "basever": "",
-            "watch": []
-        },
-        {
-            "name": "beta.4",
-            "basever": "",
-            "watch": []
-        },
-        {
-            "name": "beta.5",
-            "basever": "",
-            "watch": []
-        },
-        {
-            "name": "beta.6",
-            "basever": "",
-            "watch": []
+            "watch": [
+                "1.txt"
+            ],
+            "time": "1458030318637867900"
         }
     ]
 }
