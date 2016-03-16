@@ -45,5 +45,7 @@ func LineDiff(oldText []string, newText []string) (result LineDiffResult) {
 	for ; newProcPos < len(newText); newProcPos++ {
 		result.AddLine(newText[newProcPos], ADDED)
 	}
+	result.CalOrder()
+	result.RemoveLineBreak()
 	return
 }

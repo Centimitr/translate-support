@@ -29,6 +29,7 @@ func (c *Config) LineDiff(curVer, oldVer, filename string) string {
 	//diff
 	r := diff.LineDiff(oldText, curText)
 	//marshal json
-	d, _ := json.Marshal(r)
+	// r.TabReplace("    ")
+	d, _ := json.Marshal(r.Lines)
 	return string(d)
 }
