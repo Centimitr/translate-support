@@ -6,16 +6,17 @@ import (
 	// "io/ioutil"
 	// "log"
 	// "os"
+	"github.com/Centimitr/translate-support/tool"
 	"path/filepath"
 	// "strconv"
 	// "time"
 )
 
-func (c *Config) hasWatch(vername string, filename string) bool {
+func (c *Config) hasWatch(vername string, path string) bool {
 	for _, v := range c.Versions {
 		if vername == v.Name {
-			for _, fn := range v.Watch {
-				if fn == filename {
+			for _, fp := range v.Watch {
+				if fp == path {
 					return true
 				}
 			}
@@ -34,25 +35,24 @@ func (c *Config) GetWatchs(vername string) []string {
 	return []string{}
 }
 
-func (c *Config) AddWatch(vername string, filename string) {
-	fn := filepath.Clean(filename)
-	if !c.hasWatch(vername, fn) {
+func (c *Config) AddWatch(vername string, path string) {
+	fp := filepath.Clean(path)
+	if !c.hasWatch(vername, fp) {
 		for i, v := range c.Versions {
 			if vername == v.Name {
-				c.Versions[i].Watch = append(v.Watch, fn)
+				c.Versions[i].Watch = append(v.Watch, fp)
 			}
 		}
 	}
 	c.Save()
 }
 
-func (c *Config) RemoveWatch(vername string, filename string) {
-	for _, v := range c.Versions {
+func (c *Config) RemoveWatch(vername string, path string) {
+	for vi, v := range c.Versions {
 		if vername == v.Name {
-			for i, fn := range v.Watch {
-				if fn == filename {
-					copy(v.Watch[i:], v.Watch[i+1:])
-					c.Versions[i].Watch = v.Watch[:len(v.Watch)-1]
+			for i, fp := range v.Watch {
+				if fp == path {
+					c.Versions[vi].Watch = tool.StringSliceRemove(v.Watch, i)
 					break
 				}
 			}

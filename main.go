@@ -3,8 +3,9 @@ package main
 import (
 	// "github.com/Centimitr/translate-support/diff"
 	"github.com/Centimitr/translate-support/support"
+	"github.com/Centimitr/translate-support/tool"
 	// "io/ioutil"
-	// "strings"
+	// "encoding/json"
 	"fmt"
 	"html"
 	"net/http"
@@ -49,16 +50,23 @@ func main() {
 
 					}
 				})
-				http.HandleFunc("/api/versions/v/watches", func(w http.ResponseWriter, r *http.Request) {
+				http.HandleFunc("/api/versions/v/watches/", func(w http.ResponseWriter, r *http.Request) {
+					w.Header().Add("Access-Control-Allow-Origin", "*")
+					w.Header().Add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,HEAD,OPTIONS")
 					// get post delete
+					r.ParseForm()
 					switch r.Method {
 					case "GET":
-						d := spt.GetWatchs(r.Header.Get("version"))
-						fmt.Fprint(w, d)
+						d := spt.GetWatchs(r.Form.Get("version"))
+						fmt.Fprint(w, tool.StringSliceToJson(d))
 					case "POST":
-						spt.AddWatch(r.Header.Get("version"), r.Header.Get("filename"))
+						spt.AddWatch(r.Form.Get("version"), r.Form.Get("filepath"))
+						d := spt.GetWatchs(r.Form.Get("version"))
+						fmt.Fprint(w, tool.StringSliceToJson(d))
 					case "DELETE":
-						spt.RemoveWatch(r.Header.Get("version"), r.Header.Get("filename"))
+						spt.RemoveWatch(r.Form.Get("version"), r.Form.Get("filepath"))
+						d := spt.GetWatchs(r.Form.Get("version"))
+						fmt.Fprint(w, tool.StringSliceToJson(d))
 					}
 				})
 				http.HandleFunc("/api/versions/v/compare/", func(w http.ResponseWriter, r *http.Request) {
@@ -66,7 +74,7 @@ func main() {
 					switch r.Method {
 					case "GET":
 						r.ParseForm()
-						d := spt.LineDiff(r.Form.Get("version"), r.Form.Get("oldVersion"), r.Form.Get("filename"))
+						d := spt.LineDiff(r.Form.Get("version"), r.Form.Get("oldVersion"), r.Form.Get("filepath"))
 						fmt.Fprint(w, d)
 					}
 				})
