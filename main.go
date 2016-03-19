@@ -19,6 +19,17 @@ func main() {
 		switch os.Args[1] {
 		case "init":
 			support.Init()
+		case "set":
+			if len(os.Args) > 3 {
+				if spt, initialed := support.Ins(); initialed {
+					switch os.Args[2] {
+					case "src" || "source":
+						spt.SetSrcLang(os.Args[3])
+					case "tgt" || "target":
+						spt.SetSrcLang(os.Args[3])
+					}
+				}
+			}
 		case "serve":
 			if spt, initialed := support.Ins(); initialed {
 				fmt.Println("Initialed.")
