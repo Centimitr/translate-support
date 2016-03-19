@@ -5,7 +5,7 @@ import (
 	"github.com/Centimitr/translate-support/support"
 	"github.com/Centimitr/translate-support/tool"
 	// "io/ioutil"
-	// "encoding/json"
+	"encoding/json"
 	"fmt"
 	"html"
 	"net/http"
@@ -24,27 +24,42 @@ func main() {
 				fmt.Println("Initialed.")
 				wd, _ := os.Getwd()
 				http.Handle("/", http.FileServer(http.Dir(wd+"/"+support.WORKSPACE_DIR+"/dist")))
-				http.HandleFunc("/api/versions", func(w http.ResponseWriter, r *http.Request) {
+				http.HandleFunc("/api/versions/", func(w http.ResponseWriter, r *http.Request) {
+					w.Header().Add("Access-Control-Allow-Origin", "*")
+					w.Header().Add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,HEAD,OPTIONS")
+					r.ParseForm()
 					// get post
 					switch r.Method {
 					case "GET":
 						d := spt.GetVers()
-						fmt.Fprint(w, d)
+						j, _ := json.Marshal(d)
+						fmt.Fprint(w, string(j))
 					case "POST":
-						spt.AddVer(r.Header.Get("version"))
+						spt.AddVer(r.Form.Get("version"))
+						d := spt.GetVers()
+						j, _ := json.Marshal(d)
+						fmt.Fprint(w, string(j))
+					case "DELETE":
+						spt.RemoveVer(r.Form.Get("version"))
+						d := spt.GetVers()
+						j, _ := json.Marshal(d)
+						fmt.Fprint(w, string(j))
 					}
 				})
 				// to avoid using of 3rd party mux library, router params transferred to get
-				http.HandleFunc("/api/versions/v", func(w http.ResponseWriter, r *http.Request) {
+				http.HandleFunc("/api/versions/v/", func(w http.ResponseWriter, r *http.Request) {
+					w.Header().Add("Access-Control-Allow-Origin", "*")
+					w.Header().Add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,HEAD,OPTIONS")
+					r.ParseForm()
 					// delete put(basever) put(initwatch) put(inittranslate)
 					switch r.Method {
 					case "DELETE":
-						spt.RemoveVer(r.Header.Get("version"))
+						spt.RemoveVer(r.Form.Get("version"))
 					case "PUT":
-						if r.Header.Get("initWatch") == "true" {
+						if r.Form.Get("initWatch") == "true" {
 
 						}
-						if r.Header.Get("initTranslate") == "true" {
+						if r.Form.Get("initTranslate") == "true" {
 
 						}
 
